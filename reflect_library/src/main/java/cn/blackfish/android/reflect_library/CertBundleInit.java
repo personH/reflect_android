@@ -9,19 +9,37 @@ import java.util.HashMap;
  * Created by shawn on 2018/5/14.
  */
 
-public class CertBundleInit extends AppLifeCycleListenr {
+public class CertBundleInit implements AppLifeCycleListenr {
 
     @Override
-    public boolean onAppCreate(Context application) {
-        Log.d(TAG, "onAppCreate");
+    public void onAppCreate(Context application) {
+        Log.d(TAG, "CertBundleInit onAppCreate start");
+        System.out.println("----------");
+        Log.d(TAG, "CertBundleInit onAppCreate end");
+    }
 
-        Log.d(TAG, application.getApplicationContext().toString());
-        return true;
+    @Override
+    public boolean onAppStop(Context context) {
+        return false;
+    }
+
+    @Override
+    public boolean onAppResume(Context context) {
+        return false;
+    }
+
+    @Override
+    public boolean onWelcomePageStart(Context context) {
+        return false;
+    }
+
+    @Override
+    public boolean onMainPageStart(Context context) {
+        return false;
     }
 
     @Override
     public boolean onNetworkSet(int type) {
-        super.onNetworkSet(type);
         Log.d(TAG, "networkType:" + type);
         return true;
     }

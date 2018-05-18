@@ -8,46 +8,20 @@ import java.util.HashMap;
  * Created by shawn on 2018/5/14.
  */
 
-public abstract class AppLifeCycleListenr {
-    public static final String TAG = AppLifeCycleListenr.class.getName();
+public interface AppLifeCycleListenr {
+    String TAG = AppLifeCycleListenr.class.getName();
 
-    //支持的方法
-    public interface MethodType {
-        String ON_APP_CREATE = "onAppCreate";
-        String ON_APP_STOP = "onAppStop";
-        String ON_APP_RESUME = "onAppResume";
+    void onAppCreate(Context context);
 
-        String ON_WELCOME_PAGE_START = "onWelcomePageStart";
-        String ON_MAINPAGE_START = "onMainPageStart";
-        String ON_NETWORK_SET = "onNetworkSet";
-        String GET_STATICS_MAPPING = "getStaticsMapping";
-    }
+    boolean onAppStop(Context context);
 
-    public abstract boolean onAppCreate(Context context);
+    boolean onAppResume(Context context);
 
-    public boolean onAppStop(Context context) {
+    boolean onWelcomePageStart(Context context);
 
-        return false;
-    }
+    boolean onMainPageStart(Context context);
 
-    public boolean onAppResume(Context context) {
-        return false;
-    }
+    boolean onNetworkSet(int type);
 
-    public boolean onWelcomePageStart(Context context) {
-
-        return false;
-    }
-
-    public boolean onMainPageStart(Context context) {
-        return false;
-    }
-
-    public boolean onNetworkSet(int type) {
-        return false;
-    }
-
-    public HashMap<String, Object> getStaticsMapping() {
-        return null;
-    }
+    HashMap<String, Object> getStaticsMapping();
 }

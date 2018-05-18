@@ -1,33 +1,62 @@
 package cn.blackfish.android.reflect_library;
 
-import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by shawn on 2018/5/14.
  */
 
-public class BundleManager {
+public class BundleManager implements InvocationHandler {
 
-    public static boolean initBundle(String className, String methodName, Context context) {
-        Object object = reflectExecute(className, methodName, context);
-        return object == null ? false : true;
+    private static BundleManager sInstance;
 
+    public static BundleManager getInstance() {
+        if (sInstance == null) {
+            sInstance = new BundleManager();
+        }
+        return sInstance;
     }
 
-    public static boolean setNetwork(String className, int type) {
-        Object object = reflectExecute(className, AppLifeCycleListenr.MethodType.ON_NETWORK_SET, type);
-        return object == null ? false : true;
+    private static List<String> sBundlelist = new ArrayList<>();
+
+    public void register(String bundleName) {
+        sBundlelist.add(bundleName);
     }
 
-    public static HashMap<String, Object> getHashMap(String className) {
+    public AppLifeCycleListenr getDelegate() {
+        AppLifeCycleListenr init = new BundleProxy();
+        AppLifeCycleListenr appLifeCycleListenr = (AppLifeCycleListenr) Proxy.newProxyInstance(init.getClass().getClassLoader()
+                , new Class[]{AppLifeCycleListenr.class}, BundleManager.getInstance());
+        return appLifeCycleListenr;
+    }
 
-        return (HashMap<String, Object>) reflectExecute(className, AppLifeCycleListenr.MethodType.GET_STATICS_MAPPING, null);
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        if (sBundlelist.isEmpty()) {
+            return null;
+        }
+
+        for (String bundlClass : sBundlelist) {
+            if (TextUtils.isEmpty(bundlClass)) {
+                continue;
+            }
+            ClassLoader classLoader = proxy.getClass().getClassLoader();
+            Class clazz = classLoader.loadClass(bundlClass);
+            Constructor constructor = clazz.getConstructor();
+            Object object = constructor.newInstance();
+            method.invoke(object, args);
+        }
+
+        return null;
     }
 
     private static Object reflectExecute(String className, String methodName, Object... objects) {
