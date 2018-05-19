@@ -50,7 +50,7 @@ public class BundleProxy implements AppLifeCycleListenr {
     }
 
     @Override
-    public HashMap<String, Object> getStaticsMapping() {
+    public HashMap<String, Statics> getStaticsMapping() {
         return null;
     }
 }

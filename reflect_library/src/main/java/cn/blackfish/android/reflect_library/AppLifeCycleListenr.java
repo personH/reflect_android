@@ -23,5 +23,5 @@ public interface AppLifeCycleListenr {
 
     boolean onNetworkSet(int type);
 
-    HashMap<String, Object> getStaticsMapping();
+    HashMap<String, Statics> getStaticsMapping();
 }

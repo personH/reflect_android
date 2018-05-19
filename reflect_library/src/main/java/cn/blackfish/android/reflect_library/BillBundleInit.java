@@ -15,6 +15,7 @@ public class BillBundleInit implements AppLifeCycleListenr {
     public void onAppCreate(Context application) {
         Log.d(TAG, "BillBundleInit onAppCreate start");
         System.out.println("----------");
+        CommonStatics.getsInstance(application.getApplicationContext()).addBundleStatics(getStaticsMapping());
         Log.d(TAG, "BillBundleInit onAppCreate end");
     }
 
@@ -45,11 +46,11 @@ public class BillBundleInit implements AppLifeCycleListenr {
     }
 
     @Override
-    public HashMap<String, Object> getStaticsMapping() {
+    public HashMap<String, Statics> getStaticsMapping() {
         Log.d(TAG, "getStaticsMapping");
-        HashMap<String, Object> hashMap = new HashMap<>();
+        HashMap<String, Statics> hashMap = new HashMap<>();
         for (int i = 0; i <= 1000; i++) {
-            hashMap.put("bill" + i, new Statics(i));
+            hashMap.put("bill" + i, new Statics(i, "value" + i, "product" + i));
         }
         return hashMap;
     }
